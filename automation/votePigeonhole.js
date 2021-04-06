@@ -1,15 +1,20 @@
 const PigeonholeBot = require("../bots/pigeonhole");
 
 async function main() {
-  const [questionId, dataId] = process.argv.slice(2);
+  const [questionId, attempts, ...dataIds] = process.argv.slice(2);
   const bot = new PigeonholeBot();
-  try {
-    await bot.init();
-    await bot.openURL(`https://pigeonhole.at/PRODUCTNTECH/q/${questionId}`);
-    await bot.createProfile("Anonymous");
-    await bot.vote(dataId);
-  } finally {
-    await bot.quit();
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    try {
+      await bot.init();
+      await bot.openURL(`https://pigeonhole.at/${questionId}`);
+      await bot.createProfile("Anonymous");
+      for (let i = 0; i < dataIds.length; i++) {
+        await bot.vote(dataIds[i]);
+        await bot.scrollTo(100);
+      }
+    } finally {
+      await bot.quit();
+    }
   }
 }
 

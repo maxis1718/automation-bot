@@ -47,6 +47,11 @@ class PigeonholeBot {
     await voteButton.click();
     await this.driver.sleep(800);
   };
+
+  scrollTo = async (pixel) => {
+    this.driver.executeScript(`window.scrollTo(0,${pixel});`);
+    await this.driver.sleep(200);
+  };
 }
 
 module.exports = PigeonholeBot;
